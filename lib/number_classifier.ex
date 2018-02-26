@@ -3,6 +3,7 @@ defmodule NumberClassifier do
     rem(number, potential_factor) == 0
   end
 
+  # First Implementation
   def factors(number, i, sq_number, acc) when i <= sq_number do
     cond do 
       isFactor(number, i) -> factors(number, i + 1, sq_number, acc |> MapSet.put(i) |> MapSet.put(div(number, i)))
@@ -14,14 +15,24 @@ defmodule NumberClassifier do
     acc
   end
 
+
+  # Second Implementation
+  def factors2(number) do
+    result = for n <- 1..trunc(:math.sqrt(number)), isFactor(number, n), do: [n, div(number, n)]
+    result 
+    |> List.flatten
+    |> MapSet.new
+  end
+
+
   def isPerfect(number) do
     sum_factors(number) - number == number
   end
 
   def sum_factors(number) do 
-     number
-    |> factors(1, :math.sqrt(number), MapSet.new)
-    |> Enum.sum
+    number
+      |> factors2
+      |> Enum.sum
   end
 
   def isAbundant(number) do
@@ -32,6 +43,7 @@ defmodule NumberClassifier do
     sum_factors(number) - number < number;
   end
 end
+
 
 
 # public class NumberClassifier {
@@ -70,3 +82,5 @@ end
 #         return sum(factors(number)) - number < number;
 #     }
 # }
+
+# isFactor = fn(number, potential_factor) do rem(number, potential_factor) == 0 end
